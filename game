@@ -1,0 +1,304 @@
+<html>
+<head>
+	<title>My Snake Game</title>
+	   
+</head>
+<body>
+    <canvas width="450" height="450" id="canvas"></canvas>
+    <Style>
+    </Style>
+  <script>var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var width = canvas.width;
+var height = canvas.height;
+
+// set the canvas background to black
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, width, height);
+ctx.strokeStyle = "white";
+ctx.strokeRect(0, 0, width, height);
+var size = 10; // size of green square
+
+// draw a green square on the canvas
+// at position (x,y) with a width and height of size
+function drawSquare(x, y) {
+    ctx.fillStyle = "lightblue";
+    ctx.fillRect(x * size, y * size, size, size);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(x * size, y * size, size, size);
+}
+function drawAnxiety(x, y) {
+    ctx.fillStyle = "red";
+    ctx.fillRect(x * size, y * size, size, size);
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(x * size, y * size, size, size);
+}
+function drawHappiness(x, y) {
+    ctx.fillStyle = "gold";
+    ctx.fillRect(x * siz, y * siz, siz, siz);
+    ctx.strokeStyle = "gold";
+    ctx.strokeRect(x * siz, y * siz, siz, siz);
+}
+var siz = 1
+function addPoint() {
+            ++score;
+           
+        }
+function losePoint() {
+            --score;
+           
+        }
+function resetPoints() {
+   score = "1"
+    console.log (deathSound);
+}
+function killAnxiety() {
+    score = "6969"
+}
+var score = 1;
+function createFood() {
+    // create the food in a random location
+    food = {
+        x: Math.round(Math.random() * (width - size) / size),
+        y: Math.round(Math.random() * (height - size) / size),
+    };
+    drawSquare(food.x, food.y);
+}
+function createFood2() {
+    // create the food in a random location
+    food2 = {
+        x: Math.round(Math.random() * (width - size) / size),
+        y: Math.round(Math.random() * (height - size) / size),
+    };
+    drawSquare(food2.x, food2.y);
+}
+function createAnxiety() {
+    anxiety = {
+        x: Math.round(Math.random() * (width - size) / size),
+        y: Math.round(Math.random() * (height - size) / size)
+    };
+    drawAnxiety(anxiety.x, anxiety.y)
+}
+function createAnxiety2() {
+    anxiety2 = {
+        x: Math.round(Math.random() * (width - size) / size),
+        y: Math.round(Math.random() * (height - size) / size)
+    };
+    drawAnxiety(anxiety2.x, anxiety2.y)
+}
+function createAnxiety3() {
+    anxiety3 = {
+        x: Math.round(Math.random() * (width - size) / size),
+        y: Math.round(Math.random() * (height - size) / size)
+    };
+    drawAnxiety(anxiety3.x, anxiety3.y)
+}
+function createSnake() {
+    var length = 1;
+    snakeArray = [];
+
+    // create a snake of length 5 squares
+    for (var i = length - 1; i >= 0; i--) {
+        // save the x and y positions for each square
+        segment = {
+            x: i,
+            y: 0
+        };
+        snakeArray[length - 1 - i] = segment;
+        drawSquare(segment.x, segment.y);
+    }
+}
+function drawScore(){
+
+ctx.fillStyle = "white";    
+    
+ctx.font = "48px Arial";
+
+ctx.textAlign = "left";
+
+ctx.fillText("Score: "+score,0,canvas.height-50);
+ }
+var direction;
+
+
+// keyboard control for arrow keys
+// make sure the snake does not go back on itself
+document.addEventListener("keydown", function(e) {
+
+    var key = e.which;
+    if (key == "37" && direction != "right") {
+        direction = "left";
+    } else if (key == "38" && direction != "down") {
+        direction = "up";
+    } else if (key == "39" && direction != "left") {
+        direction = "right";
+    } else if (key == "40" && direction != "up") {
+        direction = "down";
+    }
+}, false);
+var deathSound = "oof"
+var rng = "rng lol"
+
+function gameLoop() {
+    
+// set the canvas background to black
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = "grey";
+    ctx.strokeRect(0, 0, width, height);
+// get position of first segment of snake
+    var nx = snakeArray[0].x;
+    var ny = snakeArray[0].y;
+    // get next position of snake based on direction
+    // if direction is right, increase "x" position by 1.
+    // if direction is left, decrease "x" position by 1.
+    // if direction is down, increase "y" position by 1.
+    // if direction is up, decrease "y" position by 1.
+    if (direction == "right") {
+        nx++;
+    } else if (direction == "left") {
+        nx--;
+    } else if (direction == "up") {
+        ny--;
+    } else if (direction == "down") {
+        ny++;
+    }
+// failed (touching edge) ?
+    if (nx == -1 || nx == width / size || ny == -1 ||
+        ny == height / size) {
+        // game over
+        resetPoints();
+        startGame();
+        return;
+    }
+// ate food ?
+    if (nx == food.x && ny == food.y) {
+        // add a new segment (tail) to the snake
+        var tail = {
+            x: nx,
+            y: ny
+        };
+        var startingPos = snakeArray.length - 1;
+
+        // create food in a new location
+        createFood();
+        addPoint();
+    } 
+     else if (nx == food2.x && ny == food2.y) {
+        // add a new segment (tail) to the snake
+        var tail = {
+            x: nx,
+            y: ny
+        };
+        var startingPos = snakeArray.length - 1;
+
+        // create food in a new location
+        createFood2();
+        addPoint();
+     }
+    else {
+        // save last segment of snake (tail)
+        var tail = snakeArray[snakeArray.length - 1];
+        var startingPos = snakeArray.length - 2;
+        tail.x = nx;
+        tail.y = ny;
+    }
+// move the rest of the segments one up and 
+    // add the tail to the front of the snake to 
+    // simulate movement in the direction
+    for (var i = startingPos; i >= 0; i--) {
+        snakeArray[i + 1] = snakeArray[i];
+    }
+    snakeArray[0] = tail; 
+    // draw snake
+    for (var i = 0; i < snakeArray.length; i++) {
+        var c = snakeArray[i];
+        drawSquare(c.x, c.y);
+    }
+// draw food
+ if (score <5) {
+    createFood2();
+ }
+    drawSquare(food.x, food.y);
+    drawSquare(food2.x, food2.y);
+    drawScore();
+    
+    // ANXIETY ;-;
+    if (nx == anxiety.x && ny == anxiety.y) {
+        // add a new segment (tail) to the snake
+        var tail = {
+            x: nx,
+            y: ny
+        };
+        var startingPos = snakeArray.length - 1;
+
+        // create food in a new location
+        resetPoints();
+        startGame();
+        console.log (rng);
+    } 
+     else if (nx == anxiety2.x && ny == anxiety2.y) {
+        // add a new segment (tail) to the snake
+        var tail = {
+            x: nx,
+            y: ny
+        };
+        var startingPos = snakeArray.length - 1;
+
+        // create food in a new location
+        resetPoints();
+         startGame();
+         console.log (rng);
+     }
+    else if (nx == anxiety3.x && ny == anxiety3.y) {
+        // add a new segment (tail) to the snake
+        var tail = {
+            x: nx,
+            y: ny
+        };
+        var startingPos = snakeArray.length - 1;
+
+        // create food in a new location
+        resetPoints();
+         startGame();
+        console.log (rng);
+     }
+// draw food
+ if (score <999) {
+    createAnxiety();
+ }
+if (score <999) {
+createAnxiety2();
+}
+if (score <999) {
+createAnxiety3();
+}
+    drawAnxiety(anxiety.x, anxiety.y);
+    drawAnxiety(anxiety2.x, anxiety2.y);
+    drawAnxiety(anxiety3.x, anxiety3.y);
+    drawScore();
+}
+function startGame() {
+// create snake
+    drawScore();
+    createSnake();
+// create food
+    createFood();
+    createFood2();
+    createAnxiety();
+    createAnxiety2();
+    createAnxiety3();
+// set initial direction for the snake to move
+    direction = "right";
+if (typeof loopId != "undefined") {
+        clearInterval(loopId);
+    }
+// start the game loop
+    loopId = setInterval(gameLoop, 60);
+    
+
+}
+startGame();
+</script>
+</body>
+</html>
